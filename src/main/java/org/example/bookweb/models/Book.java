@@ -7,7 +7,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 @Entity
 @Data
 @Table(name = "books")
@@ -17,6 +19,7 @@ public class Book {
     private Long id;
     private String title;
     private String author;
+    @Column(unique = true, nullable = false)
     private Long isbn;
     private Double price;
     private String description;

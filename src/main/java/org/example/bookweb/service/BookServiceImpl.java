@@ -1,7 +1,6 @@
 package org.example.bookweb.service;
 
 import java.util.List;
-import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import org.example.bookweb.dto.BookDto;
 import org.example.bookweb.dto.CreateBookRequestDto;
@@ -20,7 +19,6 @@ public class BookServiceImpl implements BookService {
     @Override
     public BookDto add(CreateBookRequestDto requestDto) {
         Book book = bookMapper.toModel(requestDto);
-        book.setIsbn(new Random().nextLong(1000000000));
         Book savedBook = bookRepository.save(book);
         return bookMapper.toDto(savedBook);
     }

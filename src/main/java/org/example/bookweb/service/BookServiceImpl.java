@@ -9,6 +9,7 @@ import org.example.bookweb.mapper.BookMapper;
 import org.example.bookweb.models.Book;
 import org.example.bookweb.repository.BookRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -25,9 +26,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<BookDto> findAll() {
-        return bookRepository.findAll().stream()
-                .map(bookMapper::toDto)
-                .toList();
+        return bookMapper.toDto(bookRepository.findAll());
     }
 
     @Override
@@ -38,6 +37,7 @@ public class BookServiceImpl implements BookService {
         return bookMapper.toDto(book);
     }
 
+    @Transactional
     @Override
     public BookDto update(Long id, CreateBookRequestDto dto) {
         Book newBook = bookMapper.toModel(dto);

@@ -17,6 +17,6 @@ public class IsbnSpecificationProvider implements SpecificationProvider<Book> {
 
     public Specification<Book> getSpecification(String[] params) {
         return (root, query, criteriaBuilder)
-                -> root.get("isbn").in(Arrays.stream(params).toArray());
+                -> root.get(KEY).in(Arrays.stream(params).toArray());
     }
 }

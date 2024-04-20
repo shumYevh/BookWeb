@@ -21,7 +21,7 @@ databaseChangeLog:
                   type: varchar(255)
               - column:
                   name: isbn
-                  type: bigint
+                  type: varchar(255)
                   constraints:
                     unique: true
                     nullable: false

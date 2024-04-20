@@ -22,7 +22,7 @@ public class Book {
     private String title;
     private String author;
     @Column(unique = true, nullable = false)
-    private Long isbn;
+    private String isbn;
     private Double price;
     private String description;
     @Column(name = "cover_image")

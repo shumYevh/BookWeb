@@ -6,7 +6,7 @@ import org.example.bookweb.dto.user.UserResponseDto;
 import org.example.bookweb.exeption.RegistrationException;
 import org.example.bookweb.mapper.UserMapper;
 import org.example.bookweb.models.User;
-import org.example.bookweb.repository.user.UserRepository;
+import org.example.bookweb.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor

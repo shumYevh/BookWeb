@@ -1,4 +1,4 @@
-package org.example.bookweb.repository.user;
+package org.example.bookweb.repository;
 
 import java.util.Optional;
 import org.example.bookweb.models.User;

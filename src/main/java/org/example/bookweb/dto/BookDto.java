@@ -1,7 +1,9 @@
 package org.example.bookweb.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+@Schema(description = "Response DTO")
 @Data
 public class BookDto {
     private Long id;

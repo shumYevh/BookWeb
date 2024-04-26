@@ -1,4 +1,4 @@
-package org.example.bookweb.dto;
+package org.example.bookweb.dto.book;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;

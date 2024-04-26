@@ -1,10 +1,10 @@
-package org.example.bookweb.service;
+package org.example.bookweb.service.book;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.example.bookweb.dto.BookDto;
-import org.example.bookweb.dto.BookSearchParameters;
-import org.example.bookweb.dto.CreateBookRequestDto;
+import org.example.bookweb.dto.book.BookDto;
+import org.example.bookweb.dto.book.BookSearchParameters;
+import org.example.bookweb.dto.book.CreateBookRequestDto;
 import org.example.bookweb.exeption.EntityNotFoundException;
 import org.example.bookweb.mapper.BookMapper;
 import org.example.bookweb.models.Book;

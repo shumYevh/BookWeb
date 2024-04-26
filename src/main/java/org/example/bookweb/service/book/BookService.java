@@ -1,9 +1,9 @@
-package org.example.bookweb.service;
+package org.example.bookweb.service.book;
 
 import java.util.List;
-import org.example.bookweb.dto.BookDto;
-import org.example.bookweb.dto.BookSearchParameters;
-import org.example.bookweb.dto.CreateBookRequestDto;
+import org.example.bookweb.dto.book.BookDto;
+import org.example.bookweb.dto.book.BookSearchParameters;
+import org.example.bookweb.dto.book.CreateBookRequestDto;
 import org.springframework.data.domain.Pageable;
 
 public interface BookService {

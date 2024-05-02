@@ -4,29 +4,21 @@ databaseChangeLog:
       author: shumYevh
       changes:
         - createTable:
-            tableName: user_roles
+            tableName: users_roles
             columns:
               - column:
                   name: user_id
                   type: bigint
                   constraints:
-                    primaryKey: true
+                    foreignKeyName: fk_users_roles_users
+                    referencedTableName: users
+                    referencedColumnNames: id
+                    nullable: false
               - column:
                   name: role_id
                   type: bigint
                   constraints:
-                    primaryKey: true
-        - addForeignKeyConstraint:
-            constraintName: foreignKeyFromUser
-            baseTableName: user_roles
-            baseColumnNames: user_id
-            referencedTableName: users
-            referencedColumnNames: id
-            onDelete: CASCADE
-        - addForeignKeyConstraint:
-            constraintName: foreignKeyFromRole
-            baseTableName: user_roles
-            baseColumnNames: role_id
-            referencedTableName: roles
-            referencedColumnNames: id
-            onDelete: CASCADE
+                    foreignKeyName: fk_users_roles_roles
+                    referencedTableName: roles
+                    referencedColumnNames: id
+                    nullable: false

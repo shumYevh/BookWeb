@@ -1,5 +1,6 @@
 package org.example.bookweb.service.user;
 
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.example.bookweb.dto.user.UserRegistrationRequestDto;
 import org.example.bookweb.dto.user.UserResponseDto;
@@ -13,12 +14,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Set;
-
 @RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
-    public static final Role.RoleName USER_ROLE = Role.RoleName.USER;
+
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final UserMapper userMapper;
@@ -28,16 +27,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDto register(UserRegistrationRequestDto requestDto)
             throws RegistrationException {
-        if (userRepository.findUserByEmail(requestDto.getEmail()).isPresent()) {
+        if (userRepository.findByEmail(requestDto.getEmail()).isPresent()) {
             throw new RegistrationException("Can't register user");
         }
-        User newUser = new User();
-        newUser.setEmail(requestDto.getEmail());
+        User newUser = userMapper.toModel(requestDto);
         newUser.setPassword(passwordEncoder.encode(requestDto.getPassword()));
-        newUser.setFirstName(requestDto.getFirstName());
-        newUser.setLastName(requestDto.getLastName());
-        newUser.setShippingAddress(requestDto.getShippingAddress());
-        newUser.setRoles(Set.of(roleRepository.findFirstByRole(USER_ROLE)));
+        newUser.setRoles(Set.of(roleRepository.getByRole(Role.RoleName.USER)));
         User savedUser = userRepository.save(newUser);
         return userMapper.toUserResponse(savedUser);
     }

@@ -9,7 +9,6 @@ import jakarta.persistence.Table;
 import lombok.Data;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
-import org.hibernate.annotations.Where;
 
 @Data
 @SQLDelete(sql = "UPDATE books SET is_deleted = true WHERE id=?")

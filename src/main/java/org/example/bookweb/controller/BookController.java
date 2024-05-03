@@ -29,7 +29,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class BookController {
     private final BookService bookService;
 
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping
     @Operation(summary = "Get all books with pageable params",
             description = "Get all books with pageable parameters"
@@ -38,28 +37,27 @@ public class BookController {
         return bookService.findAll(pageable);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
     @Operation(summary = "Save book with dto", description = "Save book with dto")
     public BookDto save(@RequestBody @Valid CreateBookRequestDto dto) {
         return bookService.add(dto);
     }
 
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping("/{id}")
     @Operation(summary = "Find book by id", description = "Find book by id")
     public BookDto findById(@PathVariable Long id) {
         return bookService.findById(id);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/{id}")
     @Operation(summary = "Update book by id", description = "Update book by id")
     public BookDto put(@PathVariable Long id, @RequestBody @Valid CreateBookRequestDto dto) {
         return bookService.update(id, dto);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete book by id", description = "Delete book by id")
@@ -67,7 +65,6 @@ public class BookController {
         bookService.deleteById(id);
     }
 
-    @PreAuthorize("hasRole('USER') || hasRole('ADMIN')")
     @GetMapping("/search")
     @Operation(summary = "Search books by parameters with pageable",
             description = "Search books by title, authors, isbns and pageable parameters"

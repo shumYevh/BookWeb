@@ -1,27 +1,39 @@
 package org.example.bookweb.service.user;
 
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.example.bookweb.dto.user.UserRegistrationRequestDto;
 import org.example.bookweb.dto.user.UserResponseDto;
 import org.example.bookweb.exeption.RegistrationException;
 import org.example.bookweb.mapper.UserMapper;
+import org.example.bookweb.models.Role;
 import org.example.bookweb.models.User;
+import org.example.bookweb.repository.RoleRepository;
 import org.example.bookweb.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
-    private final UserRepository userRepository;
-    private final UserMapper userMapper;
 
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
+
+    @Transactional
     @Override
     public UserResponseDto register(UserRegistrationRequestDto requestDto)
             throws RegistrationException {
-        if (userRepository.findAllByEmail(requestDto.getEmail()).isPresent()) {
+        if (userRepository.findByEmail(requestDto.getEmail()).isPresent()) {
             throw new RegistrationException("Can't register user");
         }
-        User savedUser = userRepository.save(userMapper.toModel(requestDto));
+        User newUser = userMapper.toModel(requestDto);
+        newUser.setPassword(passwordEncoder.encode(requestDto.getPassword()));
+        newUser.setRoles(Set.of(roleRepository.getByRole(Role.RoleName.USER)));
+        User savedUser = userRepository.save(newUser);
         return userMapper.toUserResponse(savedUser);
     }
 }

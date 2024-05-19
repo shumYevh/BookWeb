@@ -5,6 +5,8 @@ import org.example.bookweb.models.Book;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-public interface BookRepository extends JpaRepository<Book,Long>, JpaSpecificationExecutor<Book> {
+public interface BookRepository extends
+        JpaRepository<Book,Long>,
+        JpaSpecificationExecutor<Book> {
     Optional<Book> findBookById(Long id);
 }

@@ -6,8 +6,10 @@ import org.example.bookweb.dto.book.BookDto;
 import org.example.bookweb.dto.category.CategoryDto;
 import org.example.bookweb.dto.category.CreateCategoryRequestDto;
 import org.example.bookweb.exeption.EntityNotFoundException;
+import org.example.bookweb.mapper.BookMapper;
 import org.example.bookweb.mapper.CategoryMapper;
 import org.example.bookweb.models.Category;
+import org.example.bookweb.repository.BookRepository;
 import org.example.bookweb.repository.category.CategoryRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
+    private final BookRepository bookRepository;
+    private final BookMapper bookMapper;
 
     @Override
     public List<CategoryDto> findAll(Pageable pageable) {
@@ -58,6 +62,6 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<BookDto> findBooksByCategoryId(Long categoryId) {
-        return List.of();
+        return bookMapper.toBookDto(bookRepository.findBooksByCategoriesId(categoryId));
     }
 }

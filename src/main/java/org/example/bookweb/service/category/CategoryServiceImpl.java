@@ -2,7 +2,7 @@ package org.example.bookweb.service.category;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.example.bookweb.dto.book.BookDto;
+import org.example.bookweb.dto.book.BookDtoWithoutCategoryIds;
 import org.example.bookweb.dto.category.CategoryDto;
 import org.example.bookweb.dto.category.CreateCategoryRequestDto;
 import org.example.bookweb.exeption.EntityNotFoundException;
@@ -61,7 +61,8 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<BookDto> findBooksByCategoryId(Long categoryId) {
-        return bookMapper.toBookDto(bookRepository.findBooksByCategoriesId(categoryId));
+    public List<BookDtoWithoutCategoryIds> findBooksByCategoryId(Long categoryId) {
+        return bookMapper.toBookDtoWithoutCategoryIds(
+                bookRepository.findBooksByCategoriesId(categoryId));
     }
 }

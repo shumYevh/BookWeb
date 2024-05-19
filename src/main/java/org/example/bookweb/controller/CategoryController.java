@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.example.bookweb.dto.book.BookDto;
+import org.example.bookweb.dto.book.BookDtoWithoutCategoryIds;
 import org.example.bookweb.dto.category.CategoryDto;
 import org.example.bookweb.dto.category.CreateCategoryRequestDto;
 import org.example.bookweb.service.category.CategoryService;
@@ -68,7 +68,7 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}/books")
-    public List<BookDto> findBooksByCategory(@PathVariable Long id) {
+    public List<BookDtoWithoutCategoryIds> findBooksByCategory(@PathVariable Long id) {
         return categoryService.findBooksByCategoryId(id);
     }
 }

@@ -1,5 +1,6 @@
 package org.example.bookweb.service.shopping.cart;
 
+import jakarta.transaction.Transactional;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.example.bookweb.dto.shopping.cart.AddCartItemDto;
@@ -10,7 +11,6 @@ import org.example.bookweb.mapper.ShoppingCartMapper;
 import org.example.bookweb.models.Book;
 import org.example.bookweb.models.CartItem;
 import org.example.bookweb.models.ShoppingCart;
-import org.example.bookweb.models.User;
 import org.example.bookweb.repository.BookRepository;
 import org.example.bookweb.repository.UserRepository;
 import org.example.bookweb.repository.shopping.cart.CartItemRepository;
@@ -31,15 +31,16 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         return shoppingCartRepository.save(shoppingCart);
     }
 
+    @Transactional
     @Override
     public ShoppingCartResponseDto getShoppingCart(String email) {
-        ShoppingCart shoppingCart = getShoppingCartByUserEmail(email);
-        return shoppingCartMapper.toShoppingCartResponseDto(shoppingCart);
+        return shoppingCartMapper.toShoppingCartResponseDto(
+                shoppingCartRepository.findShoppingCartByUserEmail(email));
     }
 
     @Override
     public ShoppingCartResponseDto addCartItem(AddCartItemDto addCartItemDto, String email) {
-        ShoppingCart shoppingCart = getShoppingCartByUserEmail(email);
+        ShoppingCart shoppingCart = shoppingCartRepository.findShoppingCartByUserEmail(email);
         Book book = bookRepository.findById(addCartItemDto.getBookId()).orElseThrow(
                 () -> new EntityNotFoundException("Can't find book with id "
                         + addCartItemDto.getBookId())
@@ -74,7 +75,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         );
         cartItem.setQuantity(updateCartItemDto.getQuantity());
         cartItemRepository.save(cartItem);
-        return shoppingCartMapper.toShoppingCartResponseDto(getShoppingCartByUserEmail(email));
+        return shoppingCartMapper.toShoppingCartResponseDto(
+                shoppingCartRepository.findShoppingCartByUserEmail(email));
     }
 
     @Override
@@ -83,12 +85,5 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 () -> new EntityNotFoundException("Can't find cart item with id " + cartItemId)
         );
         cartItemRepository.delete(cartItem);
-    }
-
-    private ShoppingCart getShoppingCartByUserEmail(String email) {
-        User userByEmail = userRepository.findByEmail(email).orElseThrow(
-                () -> new EntityNotFoundException("User with email " + email + " not found")
-        );
-        return shoppingCartRepository.findByUser(userByEmail);
     }
 }

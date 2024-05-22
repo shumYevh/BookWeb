@@ -7,9 +7,11 @@ import org.example.bookweb.dto.user.UserResponseDto;
 import org.example.bookweb.exeption.RegistrationException;
 import org.example.bookweb.mapper.UserMapper;
 import org.example.bookweb.models.Role;
+import org.example.bookweb.models.ShoppingCart;
 import org.example.bookweb.models.User;
 import org.example.bookweb.repository.RoleRepository;
 import org.example.bookweb.repository.UserRepository;
+import org.example.bookweb.service.shopping.cart.ShoppingCartService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +24,7 @@ public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+    private final ShoppingCartService shoppingCartService;
 
     @Transactional
     @Override
@@ -34,6 +37,9 @@ public class UserServiceImpl implements UserService {
         newUser.setPassword(passwordEncoder.encode(requestDto.getPassword()));
         newUser.setRoles(Set.of(roleRepository.getByRole(Role.RoleName.USER)));
         User savedUser = userRepository.save(newUser);
+        ShoppingCart shoppingCart = new ShoppingCart();
+        shoppingCart.setUser(savedUser);
+        shoppingCartService.createShoppingCart(shoppingCart);
         return userMapper.toUserResponse(savedUser);
     }
 }

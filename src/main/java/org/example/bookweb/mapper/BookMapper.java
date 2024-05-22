@@ -14,6 +14,7 @@ import org.mapstruct.MappingTarget;
 
 @Mapper(config = MapperConfig.class)
 public interface BookMapper {
+
     BookDto toBookDto(Book book);
 
     List<BookDto> toBookDto(List<Book> books);

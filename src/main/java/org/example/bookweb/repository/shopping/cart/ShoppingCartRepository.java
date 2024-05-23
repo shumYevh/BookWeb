@@ -16,7 +16,10 @@ public interface ShoppingCartRepository extends
     @Query("SELECT cart FROM ShoppingCart cart LEFT JOIN FETCH cart.cartItems")
     ShoppingCart findByUser(User userId);
 
-    @Query("SELECT cart FROM ShoppingCart cart JOIN cart.user u WHERE u.email = :email")
+    @Query("SELECT cart FROM ShoppingCart cart "
+            + "JOIN FETCH cart.cartItems "
+            + "JOIN cart.user u "
+            + "WHERE u.email = :email")
     ShoppingCart findShoppingCartByUserEmail(@Param("email") String email);
 
 }

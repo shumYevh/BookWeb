@@ -1,6 +1,5 @@
 package org.example.bookweb.service.shopping.cart;
 
-import jakarta.transaction.Transactional;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.example.bookweb.dto.shopping.cart.AddCartItemDto;
@@ -12,7 +11,6 @@ import org.example.bookweb.models.Book;
 import org.example.bookweb.models.CartItem;
 import org.example.bookweb.models.ShoppingCart;
 import org.example.bookweb.repository.BookRepository;
-import org.example.bookweb.repository.UserRepository;
 import org.example.bookweb.repository.shopping.cart.CartItemRepository;
 import org.example.bookweb.repository.shopping.cart.ShoppingCartRepository;
 import org.springframework.stereotype.Service;
@@ -22,7 +20,6 @@ import org.springframework.stereotype.Service;
 public class ShoppingCartServiceImpl implements ShoppingCartService {
     private final ShoppingCartRepository shoppingCartRepository;
     private final CartItemRepository cartItemRepository;
-    private final UserRepository userRepository;
     private final BookRepository bookRepository;
     private final ShoppingCartMapper shoppingCartMapper;
 
@@ -31,7 +28,6 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         return shoppingCartRepository.save(shoppingCart);
     }
 
-    @Transactional
     @Override
     public ShoppingCartResponseDto getShoppingCart(String email) {
         return shoppingCartMapper.toShoppingCartResponseDto(

@@ -21,3 +21,4 @@ databaseChangeLog:
                     referencedTableName: users
                     referencedColumnNames: id
                     nullable: false
+                    deleteCascade: true

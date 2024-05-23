@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.example.bookweb.dto.shopping.cart.AddCartItemDto;
+import org.example.bookweb.dto.shopping.cart.CartItemRequestDto;
 import org.example.bookweb.dto.shopping.cart.ShoppingCartResponseDto;
 import org.example.bookweb.dto.shopping.cart.UpdateCartItemDto;
 import org.example.bookweb.models.User;
@@ -40,10 +40,10 @@ public class ShoppingCartController {
     @PostMapping
     @Operation(summary = "Add Cart Item to Shopping cart",
             description = "Add Cart Item with dto to personal Shopping Cart")
-    public ShoppingCartResponseDto addCartItem(@RequestBody @Valid AddCartItemDto addCartItemDto,
+    public ShoppingCartResponseDto addCartItem(@RequestBody @Valid CartItemRequestDto cartItemRequestDto,
                                                Authentication authentication) {
         User user = (User) authentication.getPrincipal();
-        return shoppingCartService.addCartItem(addCartItemDto, user.getId());
+        return shoppingCartService.addCartItem(cartItemRequestDto, user.getId());
     }
 
     @PutMapping("/cart-items/{cartItemId}")
@@ -60,7 +60,8 @@ public class ShoppingCartController {
     @DeleteMapping("/cart-items/{cartItemId}")
     @Operation(summary = "Delete Cart Item",
             description = "Delete Cart Item from Shopping Cart")
-    public void deleteCartItem(@PathVariable Long cartItemId) {
-        shoppingCartService.removeCarItemFromCart(cartItemId);
+    public void deleteCartItem(@PathVariable Long cartItemId, Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        shoppingCartService.removeCarItemFromCart(cartItemId, user.getId());
     }
 }

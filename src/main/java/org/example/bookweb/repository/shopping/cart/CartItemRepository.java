@@ -8,5 +8,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 public interface CartItemRepository extends
         JpaRepository<CartItem, Long>,
         JpaSpecificationExecutor<CartItem> {
-    Optional<CartItem> findByIdAndShoppingCartId(Long id, Long cartId);
+    Optional<CartItem> findByIdAndShoppingCartId(Long itemId, Long cartId);
 }

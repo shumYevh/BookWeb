@@ -1,8 +1,7 @@
 package org.example.bookweb.service.shopping.cart;
 
-import java.util.Optional;
-
 import jakarta.transaction.Transactional;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.example.bookweb.dto.shopping.cart.CartItemRequestDto;
 import org.example.bookweb.dto.shopping.cart.ShoppingCartResponseDto;
@@ -38,11 +37,12 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         return shoppingCartMapper.toDto(shoppingCartRepository.findShoppingCartByUserId(userId));
     }
 
+    @Transactional
     @Override
     public ShoppingCartResponseDto addCartItem(CartItemRequestDto cartItemRequestDto, Long userId) {
         ShoppingCart shoppingCart = shoppingCartRepository.findShoppingCartByUserId(userId);
-        Book book = bookRepository.findById(cartItemRequestDto.getBookId()).orElseThrow(
-                () -> new EntityNotFoundException("Can't find book with id "
+        Book book = bookRepository.findById(cartItemRequestDto.getBookId())
+                .orElseThrow(() -> new EntityNotFoundException("Can't find book with id "
                         + cartItemRequestDto.getBookId())
         );
 
@@ -91,8 +91,9 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     public void removeCarItemFromCart(Long userId, Long cartItemId) {
         ShoppingCart shoppingCart = shoppingCartRepository.findShoppingCartByUserId(userId);
         CartItem cartItem = cartItemRepository
-                .findByIdAndShoppingCartId(cartItemId, shoppingCart.getId()).orElseThrow(
-                () -> new EntityNotFoundException("Can't find cart item with id " + cartItemId)
+                .findByIdAndShoppingCartId(cartItemId, shoppingCart.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Can't find cart item with id "
+                        + cartItemId)
         );
         cartItemRepository.delete(cartItem);
     }

@@ -40,8 +40,9 @@ public class ShoppingCartController {
     @PostMapping
     @Operation(summary = "Add Cart Item to Shopping cart",
             description = "Add Cart Item with dto to personal Shopping Cart")
-    public ShoppingCartResponseDto addCartItem(@RequestBody @Valid CartItemRequestDto cartItemRequestDto,
-                                               Authentication authentication) {
+    public ShoppingCartResponseDto addCartItem(
+            @RequestBody @Valid CartItemRequestDto cartItemRequestDto,
+            Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         return shoppingCartService.addCartItem(cartItemRequestDto, user.getId());
     }
@@ -62,6 +63,6 @@ public class ShoppingCartController {
             description = "Delete Cart Item from Shopping Cart")
     public void deleteCartItem(@PathVariable Long cartItemId, Authentication authentication) {
         User user = (User) authentication.getPrincipal();
-        shoppingCartService.removeCarItemFromCart(cartItemId, user.getId());
+        shoppingCartService.removeCarItemFromCart(user.getId(), cartItemId);
     }
 }

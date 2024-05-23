@@ -8,13 +8,13 @@ import org.example.bookweb.models.ShoppingCart;
 public interface ShoppingCartService {
     ShoppingCart createShoppingCart(ShoppingCart shoppingCart);
 
-    ShoppingCartResponseDto getShoppingCart(String email);
+    ShoppingCartResponseDto getShoppingCart(Long userId);
 
-    ShoppingCartResponseDto addCartItem(AddCartItemDto addCartItemDto, String email);
+    ShoppingCartResponseDto addCartItem(AddCartItemDto addCartItemDto, Long userId);
 
-    ShoppingCartResponseDto updateCartItem(String email,
+    ShoppingCartResponseDto updateCartItem(Long userId,
                                            Long cartItemId,
                                            UpdateCartItemDto updateCartItemDto);
 
-    void removeCarItemFromCart(String email, Long cartItemId);
+    void removeCarItemFromCart(Long cartItemId);
 }

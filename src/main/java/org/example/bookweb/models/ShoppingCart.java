@@ -22,7 +22,7 @@ public class ShoppingCart {
     private Long id;
     @MapsId
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false, name = "user_id")
+    @JoinColumn(nullable = false, name = "id")
     private User user;
     @OneToMany (mappedBy = "shoppingCart", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<CartItem> cartItems;

@@ -10,6 +10,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.Data;
@@ -29,7 +30,7 @@ public class Book {
     private String author;
     @Column(unique = true, nullable = false)
     private String isbn;
-    private Double price;
+    private BigDecimal price;
     private String description;
     @Column(name = "cover_image")
     private String coverImage;

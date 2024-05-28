@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
+import java.math.BigDecimal;
 import java.util.Set;
 import lombok.Data;
 import org.example.bookweb.validation.Isbn;
@@ -19,7 +20,7 @@ public class CreateBookRequestDto {
     private String isbn;
     @NotNull
     @Positive
-    private Double price;
+    private BigDecimal price;
     @Size(min = 10, max = 200)
     private String description;
     @NotBlank

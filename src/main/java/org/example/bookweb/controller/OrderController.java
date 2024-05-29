@@ -33,26 +33,26 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping
-    @Operation(summary = "",
-            description = "")
+    @Operation(summary = "Place Order",
+            description = "Place order from user's shopping cart")
     public OrderResponseDto placeOrder(Authentication authentication,
                                        @Valid @RequestBody OrderRequestDto orderRequestDto) {
-        User user = (User) authentication.getPrincipal();
+        User user = getUserPrincipal(authentication);
         return orderService.placeOrder(user, orderRequestDto);
     }
 
     @GetMapping
-    @Operation(summary = "",
-            description = "")
+    @Operation(summary = "Get order history",
+            description = "Get user's order history")
     public List<OrderResponseDto> getOrderHistory(Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
+        User user = getUserPrincipal(authentication);
         return orderService.getOrdersByUser(user);
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PatchMapping("/{orderId}")
-    @Operation(summary = "",
-            description = "")
+    @Operation(summary = "Update order status",
+            description = "Update order status(only for admin)")
     public OrderResponseDto updateStatus(Authentication authentication,
                                          @PathVariable Long orderId,
                                          @RequestBody OrderStatusUpdateRequest statusRequest) {
@@ -60,28 +60,34 @@ public class OrderController {
     }
 
     @GetMapping("/{orderId}/items")
-    @Operation(summary = "",
-            description = "")
+    @Operation(summary = "Get order Items",
+            description = "Get order items from specific order and user")
     public Set<OrderItemResponseDto> getItemsByOrder(Authentication authentication,
                                                      @PathVariable Long orderId) {
-        User user = (User) authentication.getPrincipal();
+        User user = getUserPrincipal(authentication);
         return orderService.getOrderItemsByOrderId(orderId, user);
     }
 
     @GetMapping("/{orderId}/items/{itemId}")
-    @Operation(summary = "",
-            description = "")
+    @Operation(summary = "Get order Item",
+            description = "Get order item from specific order and user")
     public OrderItemResponseDto getItemByOrder(Authentication authentication,
                                           @PathVariable Long orderId,
                                           @PathVariable Long itemId) {
-        User user = (User) authentication.getPrincipal();
+        User user = getUserPrincipal(authentication);
         return orderService.getOrderItemByIdAndOrderId(user, orderId, itemId);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
-    @Operation(summary = "Delete order by id", description = "Delete order by id (only for admin)")
+    @Operation(summary = "Delete order by id",
+            description = "Delete order by id (only for admin)")
     public void delete(@PathVariable Long id) {
         orderService.deleteById(id);
+    }
+
+    private User getUserPrincipal(Authentication authentication) {
+        return (User) authentication.getPrincipal();
     }
 }

@@ -3,6 +3,7 @@ package org.example.bookweb.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.example.bookweb.dto.book.BookDto;
@@ -12,6 +13,7 @@ import org.example.bookweb.service.book.BookService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,7 +27,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Book management", description = "Endpoints for managing books")
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(value = "/books")
+@RequestMapping("/books")
+@Validated
 public class BookController {
     private final BookService bookService;
 
@@ -46,7 +49,7 @@ public class BookController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Find book by id", description = "Find book by id for registered users")
-    public BookDto findById(@PathVariable Long id) {
+    public BookDto findById(@PathVariable @Positive Long id) {
         return bookService.findById(id);
     }
 
@@ -61,7 +64,7 @@ public class BookController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete book by id", description = "Delete book by id (only for admin)")
-    public void delete(@PathVariable Long id) {
+    public void delete(@PathVariable @Positive Long id) {
         bookService.deleteById(id);
     }
 

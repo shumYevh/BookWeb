@@ -3,6 +3,7 @@ package org.example.bookweb.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.example.bookweb.dto.book.BookDtoWithoutCategoryIds;
@@ -12,6 +13,7 @@ import org.example.bookweb.service.category.CategoryService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,7 +27,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Category management", description = "Endpoints for managing categories of books")
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(value = "/categories")
+@RequestMapping("/categories")
+@Validated
 public class CategoryController {
     private final CategoryService categoryService;
 
@@ -56,19 +59,19 @@ public class CategoryController {
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete category by id",
             description = "Delete category by id (only for admin)")
-    public void delete(@PathVariable Long id) {
+    public void delete(@PathVariable @Positive Long id) {
         categoryService.deleteById(id);
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Find category by id",
             description = "Find category by id for registered users")
-    public CategoryDto findById(@PathVariable Long id) {
+    public CategoryDto findById(@PathVariable @Positive Long id) {
         return categoryService.findById(id);
     }
 
     @GetMapping("/{id}/books")
-    public List<BookDtoWithoutCategoryIds> findBooksByCategory(@PathVariable Long id) {
+    public List<BookDtoWithoutCategoryIds> findBooksByCategory(@PathVariable @Positive Long id) {
         return categoryService.findBooksByCategoryId(id);
     }
 }

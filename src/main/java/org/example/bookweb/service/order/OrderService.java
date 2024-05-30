@@ -6,6 +6,7 @@ import org.example.bookweb.dto.order.OrderItemResponseDto;
 import org.example.bookweb.dto.order.OrderRequestDto;
 import org.example.bookweb.dto.order.OrderResponseDto;
 import org.example.bookweb.dto.order.OrderStatusUpdateRequest;
+import org.example.bookweb.dto.order.UpdateOrderResponseDto;
 import org.example.bookweb.models.Order;
 import org.example.bookweb.models.User;
 
@@ -17,8 +18,8 @@ public interface OrderService {
 
     List<OrderResponseDto> getOrdersByUser(User user);
 
-    OrderResponseDto updateStatusByOrderId(Long id,
-                                           OrderStatusUpdateRequest statusUpdateRequest);
+    UpdateOrderResponseDto updateStatusByOrderId(Long id,
+                                                 OrderStatusUpdateRequest statusUpdateRequest);
 
     Set<OrderItemResponseDto> getOrderItemsByOrderId(Long orderId, User user);
 

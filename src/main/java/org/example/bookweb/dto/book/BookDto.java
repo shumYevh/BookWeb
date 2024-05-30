@@ -1,6 +1,7 @@
 package org.example.bookweb.dto.book;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.math.BigDecimal;
 import java.util.Set;
 import lombok.Data;
 
@@ -11,7 +12,7 @@ public class BookDto {
     private String title;
     private String author;
     private String isbn;
-    private Double price;
+    private BigDecimal price;
     private String description;
     private String coverImage;
     private Set<Long> categoryIds;

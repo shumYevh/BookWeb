@@ -42,4 +42,4 @@ services:
         "jwt.expiration":"500000",
         "jwt.secret":"SecretJwtCode94388233CompanyLethal383612334Example"
       }'
-      JAVA_TOOL_OPTIONS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
+      JAVA_TOOL_OPTIONS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:$DEBUG_PORT"

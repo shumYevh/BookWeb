@@ -16,7 +16,7 @@ public interface OrderItemRepository extends
             + "JOIN FETCH items.order ord "
             + "JOIN FETCH ord.user usr "
             + "WHERE ord.id = :orderId AND usr.id = :userId")
-    Set<OrderItem> findOrderItemsByOrderIdAndUserId(
+    Set<OrderItem> getOrderItemsByOrderIdAndUserId(
             @Param("orderId") Long orderId,
             @Param("userId") Long userId
     );

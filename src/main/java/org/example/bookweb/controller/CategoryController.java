@@ -34,6 +34,7 @@ public class CategoryController {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Save category with dto",
             description = "Save category with dto (only for admin)")
     public CategoryDto save(@RequestBody @Valid CreateCategoryRequestDto dto) {
@@ -43,6 +44,13 @@ public class CategoryController {
     @GetMapping
     public List<CategoryDto> findAll(Pageable pageable) {
         return categoryService.findAll(pageable);
+    }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Find category by id",
+            description = "Find category by id for registered users")
+    public CategoryDto findById(@PathVariable @Positive Long id) {
+        return categoryService.findById(id);
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -61,13 +69,6 @@ public class CategoryController {
             description = "Delete category by id (only for admin)")
     public void delete(@PathVariable @Positive Long id) {
         categoryService.deleteById(id);
-    }
-
-    @GetMapping("/{id}")
-    @Operation(summary = "Find category by id",
-            description = "Find category by id for registered users")
-    public CategoryDto findById(@PathVariable @Positive Long id) {
-        return categoryService.findById(id);
     }
 
     @GetMapping("/{id}/books")

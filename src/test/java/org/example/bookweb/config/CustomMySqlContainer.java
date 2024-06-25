@@ -1,4 +1,4 @@
-package book.web.tests.config;
+package org.example.bookweb.config;
 
 import org.testcontainers.containers.MySQLContainer;
 

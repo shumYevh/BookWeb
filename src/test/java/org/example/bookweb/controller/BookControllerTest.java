@@ -1,9 +1,23 @@
 package org.example.bookweb.controller;
 
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
+import javax.sql.DataSource;
 import lombok.SneakyThrows;
 import org.example.bookweb.dto.book.BookDto;
 import org.example.bookweb.dto.book.CreateBookRequestDto;
+import org.example.bookweb.utils.TestDataUtil;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -21,22 +35,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.testcontainers.shaded.org.apache.commons.lang3.builder.EqualsBuilder;
-
-import javax.sql.DataSource;
-import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class BookControllerTest {
@@ -72,7 +70,7 @@ public class BookControllerTest {
 
     @SneakyThrows
     private static void tearDown(DataSource dataSource) {
-        try(Connection connection = dataSource.getConnection()) {
+        try (Connection connection = dataSource.getConnection()) {
             connection.setAutoCommit(true);
             ScriptUtils.executeSqlScript(
                     connection,
@@ -89,19 +87,9 @@ public class BookControllerTest {
     @DisplayName("Create new book")
     public void createBook_ValidRequestDto_Success() throws Exception {
         //Given
-        CreateBookRequestDto requestDto = new CreateBookRequestDto()
-                .setTitle("Test Title")
-                .setAuthor("Test Author")
-                .setIsbn("0-7290-0264-0")
-                .setPrice(BigDecimal.valueOf(50))
-                .setCoverImage("url://TestCoverImage");
+        CreateBookRequestDto requestDto = TestDataUtil.getTestCreateBookRequestDto();
 
-        BookDto expected = new BookDto()
-                .setTitle("Test Title")
-                .setAuthor("Test Author")
-                .setIsbn("0-7290-0264-0")
-                .setPrice(BigDecimal.valueOf(50))
-                .setCoverImage("url://TestCoverImage");
+        BookDto expected = TestDataUtil.getTestBookDto();
 
         String jsonRequest = objectMapper.writeValueAsString(requestDto);
 
@@ -124,36 +112,8 @@ public class BookControllerTest {
     @DisplayName("FindAll books")
     public void findAllBooks_ValidRequest_Success() throws Exception {
         //Given
-        List<BookDto> expected = new ArrayList<>();
-        expected.add(new BookDto()
-                .setId(1L)
-                .setTitle("Mastering Java")
-                .setAuthor("Jane Smith")
-                .setIsbn("9789876543210")
-                .setPrice(BigDecimal.valueOf(39.99))
-                .setDescription("An advanced guide to Java programming")
-                .setCoverImage("url://mastering_java_cover.jpg")
-                .setCategoryIds(Collections.emptySet()));
+        List<BookDto> expected = TestDataUtil.getThreeDefaultBookDto();
 
-        expected.add(new BookDto()
-                .setId(2L)
-                .setTitle("Learning Spring Boot")
-                .setAuthor("John Doe")
-                .setIsbn("9781234567897")
-                .setPrice(BigDecimal.valueOf(29.99))
-                .setDescription("A comprehensive guide to Spring Boot")
-                .setCoverImage("url://spring_boot_cover.jpg")
-                .setCategoryIds(Collections.emptySet()));
-
-        expected.add(new BookDto()
-                .setId(3L)
-                .setTitle("Learning Hibernate")
-                .setAuthor("Jack Hobbit")
-                .setIsbn("9781234567895")
-                .setPrice(BigDecimal.valueOf(59.99))
-                .setDescription("A comprehensive guide to Hibernate")
-                .setCoverImage("url://hibernate_cover.jpg")
-                .setCategoryIds(Collections.emptySet()));
         //When
         MvcResult result = mockMvc.perform(
                 get("/books")
@@ -161,7 +121,8 @@ public class BookControllerTest {
                 ).andExpect(status().isOk())
                 .andReturn();
 
-        BookDto[] actual = objectMapper.readValue(result.getResponse().getContentAsByteArray(), BookDto[].class);
+        BookDto[] actual = objectMapper
+                .readValue(result.getResponse().getContentAsByteArray(), BookDto[].class);
         Assertions.assertEquals(3, actual.length);
         Assertions.assertEquals(expected, Arrays.stream(actual).toList());
     }
@@ -171,16 +132,8 @@ public class BookControllerTest {
     @DisplayName("Find book by id")
     public void findById_ValidRequest_Success() throws Exception {
         //Given
-        Long bookId = 1L;
-        BookDto expected = new BookDto()
-                .setId(bookId)
-                .setTitle("Mastering Java")
-                .setAuthor("Jane Smith")
-                .setIsbn("9789876543210")
-                .setPrice(BigDecimal.valueOf(39.99))
-                .setDescription("An advanced guide to Java programming")
-                .setCoverImage("url://mastering_java_cover.jpg")
-                .setCategoryIds(Collections.emptySet());
+        long bookId = 1L;
+        BookDto expected = TestDataUtil.getThreeDefaultBookDto().get(0);
 
         //When
         MvcResult result = mockMvc.perform(
@@ -189,7 +142,8 @@ public class BookControllerTest {
                 ).andExpect(status().isOk())
                 .andReturn();
 
-        BookDto actual = objectMapper.readValue(result.getResponse().getContentAsByteArray(), BookDto.class);
+        BookDto actual = objectMapper
+                .readValue(result.getResponse().getContentAsByteArray(), BookDto.class);
         Assertions.assertEquals(expected, actual);
     }
 
@@ -262,13 +216,7 @@ public class BookControllerTest {
     public void search_validRequest_Success() throws Exception {
         //Given
         String testBookTitle = "Test Title";
-        BookDto expectedBook = new BookDto()
-                .setId(99L)
-                .setTitle(testBookTitle)
-                .setAuthor("Test Author")
-                .setIsbn("0-7290-0264-0")
-                .setPrice(BigDecimal.valueOf(50))
-                .setCoverImage("url://TestCoverImage");
+        BookDto expectedBook = TestDataUtil.getTestBookDto();
         BookDto[] expected = new BookDto[] {expectedBook};
 
         MvcResult result = mockMvc.perform(
@@ -281,6 +229,6 @@ public class BookControllerTest {
         BookDto[] actual = objectMapper
                 .readValue(result.getResponse().getContentAsString(), BookDto[].class);
 
-        EqualsBuilder.reflectionEquals(expected, actual);
+        EqualsBuilder.reflectionEquals(expected, actual, "id");
     }
 }

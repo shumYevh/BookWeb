@@ -55,19 +55,19 @@ public class CategoryServiceTest {
 
     @BeforeEach
     void setUp() {
-        testCreateCategoryRequestDto = new CreateCategoryRequestDto();
-        testCreateCategoryRequestDto.setName("Test Category");
-        testCreateCategoryRequestDto.setDescription("Test Category Description");
+        testCreateCategoryRequestDto = new CreateCategoryRequestDto()
+                .setName("Test Category")
+                .setDescription("Test Category Description");
 
         testCategory = new Category();
         testCategory.setId(TEST_CATEGORY_ID);
         testCategory.setName("Test Category");
         testCategory.setDescription("Test Category Description");
 
-        testCategoryDto = new CategoryDto();
-        testCategoryDto.setId(testCategory.getId());
-        testCategoryDto.setName(testCategory.getName());
-        testCategoryDto.setDescription(testCategory.getDescription());
+        testCategoryDto = new CategoryDto()
+                .setId(testCategory.getId())
+                .setName(testCategory.getName())
+                .setDescription(testCategory.getDescription());
     }
 
     @Test

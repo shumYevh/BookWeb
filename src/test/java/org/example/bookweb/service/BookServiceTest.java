@@ -62,14 +62,14 @@ public class BookServiceTest {
     @BeforeEach
     void setUp() {
         // Ініціалізація тестових даних
-        createBookRequestDto = new CreateBookRequestDto();
-        createBookRequestDto.setTitle("TestTitle");
-        createBookRequestDto.setAuthor("TestAuthor");
-        createBookRequestDto.setIsbn("0-2414-7761-1");
-        createBookRequestDto.setPrice(BigDecimal.valueOf(40));
-        createBookRequestDto.setDescription("TestDescription");
-        createBookRequestDto.setCoverImage("url:TestUrl");
-        createBookRequestDto.setCategoryIds(Collections.emptySet()); // Порожній Set<Long>
+        createBookRequestDto = new CreateBookRequestDto()
+                .setTitle("TestTitle")
+                .setAuthor("TestAuthor")
+                .setIsbn("0-2414-7761-1")
+                .setPrice(BigDecimal.valueOf(40))
+                .setDescription("TestDescription")
+                .setCoverImage("url:TestUrl")
+                .setCategoryIds(Collections.emptySet()); // Порожній Set<Long>
 
         book = new Book();
         book.setId(TEST_BOOK_ID);
@@ -89,15 +89,15 @@ public class BookServiceTest {
         updateBook.setDescription("TestDescription2");
         updateBook.setCoverImage("url:TestUrl2");
 
-        bookDto = new BookDto();
-        bookDto.setId(TEST_BOOK_ID);
-        bookDto.setTitle(createBookRequestDto.getTitle());
-        bookDto.setAuthor(createBookRequestDto.getAuthor());
-        bookDto.setIsbn(createBookRequestDto.getIsbn());
-        bookDto.setPrice(createBookRequestDto.getPrice());
-        bookDto.setDescription(createBookRequestDto.getDescription());
-        bookDto.setCoverImage(createBookRequestDto.getCoverImage());
-        bookDto.setCategoryIds(createBookRequestDto.getCategoryIds());
+        bookDto = new BookDto()
+                .setId(TEST_BOOK_ID)
+                .setTitle(createBookRequestDto.getTitle())
+                .setAuthor(createBookRequestDto.getAuthor())
+                .setIsbn(createBookRequestDto.getIsbn())
+                .setPrice(createBookRequestDto.getPrice())
+                .setDescription(createBookRequestDto.getDescription())
+                .setCoverImage(createBookRequestDto.getCoverImage())
+                .setCategoryIds(createBookRequestDto.getCategoryIds());
     }
 
     @Test

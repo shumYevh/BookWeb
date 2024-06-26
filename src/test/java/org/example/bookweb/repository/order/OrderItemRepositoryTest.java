@@ -3,7 +3,7 @@ package org.example.bookweb.repository.order;
 import java.sql.Connection;
 import java.util.HashSet;
 import java.util.Set;
-
+import javax.sql.DataSource;
 import lombok.SneakyThrows;
 import org.example.bookweb.models.Order;
 import org.example.bookweb.models.OrderItem;
@@ -21,8 +21,6 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.test.context.jdbc.Sql;
 
-import javax.sql.DataSource;
-
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class OrderItemRepositoryTest {
@@ -38,7 +36,7 @@ public class OrderItemRepositoryTest {
     @BeforeAll
     static void setUpBeforeClass(
             @Autowired DataSource dataSource
-            ) throws Exception {
+    ) throws Exception {
         tearDown(dataSource);
         try (Connection connection = dataSource.getConnection()) {
             connection.setAutoCommit(true);
@@ -66,7 +64,7 @@ public class OrderItemRepositoryTest {
 
     @SneakyThrows
     private static void tearDown(DataSource dataSource) {
-        try(Connection connection = dataSource.getConnection()) {
+        try (Connection connection = dataSource.getConnection()) {
             connection.setAutoCommit(true);
             ScriptUtils.executeSqlScript(
                     connection,

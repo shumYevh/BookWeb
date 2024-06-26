@@ -6,4 +6,3 @@ SELECT id INTO @book_id FROM books WHERE isbn = '9781234567897';
 
 INSERT INTO order_items (order_id, book_id, quantity, price)
 VALUES (@order_id, @book_id, 2, 29.99);
-

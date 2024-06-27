@@ -39,6 +39,12 @@ import org.testcontainers.shaded.org.apache.commons.lang3.builder.EqualsBuilder;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class BookControllerTest {
     protected static MockMvc mockMvc;
+    private static final CreateBookRequestDto putRequestDto = new CreateBookRequestDto()
+            .setTitle("NEW Test Title")
+            .setAuthor("NEW Test Author")
+            .setIsbn("0-7290-0264-0")
+            .setPrice(BigDecimal.valueOf(100))
+            .setCoverImage("url://NEW_TestCoverImage");
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -68,17 +74,6 @@ public class BookControllerTest {
         tearDown(dataSource);
     }
 
-    @SneakyThrows
-    private static void tearDown(DataSource dataSource) {
-        try (Connection connection = dataSource.getConnection()) {
-            connection.setAutoCommit(true);
-            ScriptUtils.executeSqlScript(
-                    connection,
-                    new ClassPathResource("database/book/remove_all_books.sql")
-            );
-        }
-    }
-
     @Sql(scripts = {
             "classpath:database/book/remove_testBook_from_books.sql"
     }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
@@ -88,22 +83,18 @@ public class BookControllerTest {
     public void createBook_ValidRequestDto_Success() throws Exception {
         //Given
         CreateBookRequestDto requestDto = TestDataUtil.getTestCreateBookRequestDto();
-
         BookDto expected = TestDataUtil.getTestBookDto();
-
         String jsonRequest = objectMapper.writeValueAsString(requestDto);
-
-        //When
         MvcResult result = mockMvc.perform(post("/books")
                         .content(jsonRequest)
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isCreated())
                 .andReturn();
-
-        //Then
+        //When
         BookDto actual = objectMapper
                 .readValue(result.getResponse().getContentAsString(), BookDto.class);
+        //Then
         EqualsBuilder.reflectionEquals(expected, actual, "id");
     }
 
@@ -113,16 +104,15 @@ public class BookControllerTest {
     public void findAllBooks_ValidRequest_Success() throws Exception {
         //Given
         List<BookDto> expected = TestDataUtil.getThreeDefaultBookDto();
-
-        //When
         MvcResult result = mockMvc.perform(
                 get("/books")
                         .contentType(MediaType.APPLICATION_JSON)
                 ).andExpect(status().isOk())
                 .andReturn();
-
+        //When
         BookDto[] actual = objectMapper
                 .readValue(result.getResponse().getContentAsByteArray(), BookDto[].class);
+        //Then
         Assertions.assertEquals(3, actual.length);
         Assertions.assertEquals(expected, Arrays.stream(actual).toList());
     }
@@ -134,16 +124,15 @@ public class BookControllerTest {
         //Given
         long bookId = 1L;
         BookDto expected = TestDataUtil.getThreeDefaultBookDto().get(0);
-
-        //When
         MvcResult result = mockMvc.perform(
                 get("/books/" + bookId)
                         .contentType(MediaType.APPLICATION_JSON)
                 ).andExpect(status().isOk())
                 .andReturn();
-
+        //When
         BookDto actual = objectMapper
                 .readValue(result.getResponse().getContentAsByteArray(), BookDto.class);
+        //Then
         Assertions.assertEquals(expected, actual);
     }
 
@@ -158,31 +147,25 @@ public class BookControllerTest {
     @DisplayName("Update existing book")
     public void put_validRequestDto_Success() throws Exception {
         long bookId = 99L;
-        CreateBookRequestDto requestDto = new CreateBookRequestDto()
-                .setTitle("NEW Test Title")
-                .setAuthor("NEW Test Author")
-                .setIsbn("0-7290-0264-0")
-                .setPrice(BigDecimal.valueOf(100))
-                .setCoverImage("url://NEW_TestCoverImage");
 
         BookDto expected = new BookDto()
-                .setTitle("NEW Test Title")
-                .setAuthor("NEW Test Author")
-                .setIsbn("0-7290-0264-0")
-                .setPrice(BigDecimal.valueOf(100))
-                .setCoverImage("url://NEW_TestCoverImage");
+                .setTitle(putRequestDto.getTitle())
+                .setAuthor(putRequestDto.getAuthor())
+                .setIsbn(putRequestDto.getIsbn())
+                .setPrice(putRequestDto.getPrice())
+                .setCoverImage(putRequestDto.getCoverImage());
 
-        String jsonRequest = objectMapper.writeValueAsString(requestDto);
-
+        String jsonRequest = objectMapper.writeValueAsString(putRequestDto);
         MvcResult result = mockMvc.perform(
                 put("/books/" + bookId)
                         .content(jsonRequest)
                         .contentType(MediaType.APPLICATION_JSON)
                 ).andExpect(status().isOk())
                 .andReturn();
-
+        //When
         BookDto actual = objectMapper
                 .readValue(result.getResponse().getContentAsString(), BookDto.class);
+        //Then
         EqualsBuilder.reflectionEquals(expected, actual, "id");
     }
 
@@ -218,17 +201,27 @@ public class BookControllerTest {
         String testBookTitle = "Test Title";
         BookDto expectedBook = TestDataUtil.getTestBookDto();
         BookDto[] expected = new BookDto[] {expectedBook};
-
         MvcResult result = mockMvc.perform(
                         get("/books/search")
                                 .param("titles", testBookTitle)
                                 .contentType(MediaType.APPLICATION_JSON)
                 ).andExpect(status().isOk())
                 .andReturn();
-
+        //When
         BookDto[] actual = objectMapper
                 .readValue(result.getResponse().getContentAsString(), BookDto[].class);
-
+        //Then
         EqualsBuilder.reflectionEquals(expected, actual, "id");
+    }
+
+    @SneakyThrows
+    private static void tearDown(DataSource dataSource) {
+        try (Connection connection = dataSource.getConnection()) {
+            connection.setAutoCommit(true);
+            ScriptUtils.executeSqlScript(
+                    connection,
+                    new ClassPathResource("database/book/remove_all_books.sql")
+            );
+        }
     }
 }

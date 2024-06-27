@@ -40,7 +40,6 @@ import org.springframework.data.jpa.domain.Specification;
 
 @ExtendWith(MockitoExtension.class)
 public class BookServiceTest {
-
     private static final Long TEST_BOOK_ID = 1L;
 
     @Mock

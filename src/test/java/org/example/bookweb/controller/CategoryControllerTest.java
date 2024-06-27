@@ -76,25 +76,6 @@ public class CategoryControllerTest {
         tearDown(dataSource);
     }
 
-    @SneakyThrows
-    private static void tearDown(DataSource dataSource) {
-        try (Connection connection = dataSource.getConnection()) {
-            connection.setAutoCommit(true);
-            ScriptUtils.executeSqlScript(
-                    connection,
-                    new ClassPathResource("database/category/clear_books_categories_table.sql")
-            );
-            ScriptUtils.executeSqlScript(
-                    connection,
-                    new ClassPathResource("database/category/remove_all_categories.sql")
-            );
-            ScriptUtils.executeSqlScript(
-                    connection,
-                    new ClassPathResource("database/book/remove_all_books.sql")
-            );
-        }
-    }
-
     @Sql(scripts = {
             "classpath:database/category/remove_test_category.sql"
     }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
@@ -104,20 +85,18 @@ public class CategoryControllerTest {
     public void createCategory_validRequestDto_Success() throws Exception {
         //Given
         CreateCategoryRequestDto requestDto = TestDataUtil.getTestCreateCategoryRequestDto();
-        CategoryDto expected = TestDataUtil.getTestCategoryDto();
+        CategoryDto expected = TestDataUtil.getTestFantasyCategoryDto();
         String jsonRequest = objectMapper.writeValueAsString(requestDto);
-
-        //When
         MvcResult result = mockMvc.perform(post("/categories")
                         .content(jsonRequest)
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isCreated())
                 .andReturn();
-
-        //Then
+        //When
         CategoryDto actual = objectMapper
                 .readValue(result.getResponse().getContentAsString(), CategoryDto.class);
+        //Then
         EqualsBuilder.reflectionEquals(expected, actual, "id");
     }
 
@@ -127,15 +106,15 @@ public class CategoryControllerTest {
     public void findAllCategories_ValidRequest_Success() throws Exception {
         //Given
         List<CategoryDto> expected = TestDataUtil.getThreeDefaultCategoryDto();
-        //When
         MvcResult result = mockMvc.perform(
                 get("/categories")
                         .contentType(MediaType.APPLICATION_JSON)
                 ).andExpect(status().isOk())
                 .andReturn();
-        //Then
+        //When
         CategoryDto[] actual = objectMapper.readValue(
                 result.getResponse().getContentAsByteArray(), CategoryDto[].class);
+        //Then
         Assertions.assertEquals(3, actual.length);
         Assertions.assertEquals(expected, Arrays.stream(actual).toList());
     }
@@ -146,16 +125,16 @@ public class CategoryControllerTest {
     public void findCategoryById_ValidRequest_Success() throws Exception {
         //Given
         long testCategoryId = 1L;
-        CategoryDto expected = TestDataUtil.getTestCategoryDto();
-        //When
+        CategoryDto expected = TestDataUtil.getTestFantasyCategoryDto();
         MvcResult result = mockMvc.perform(
                 get("/categories/" + testCategoryId)
                         .contentType(MediaType.APPLICATION_JSON)
                 ).andExpect(status().isOk())
                 .andReturn();
-        //Then
+        //When
         CategoryDto actual = objectMapper.readValue(
                 result.getResponse().getContentAsByteArray(), CategoryDto.class);
+        //Then
         Assertions.assertEquals(expected, actual);
     }
 
@@ -169,6 +148,7 @@ public class CategoryControllerTest {
     @Test
     @DisplayName("Update existing category")
     public void put_validRequestDto_Success() throws Exception {
+        //Given
         long testCategoryId = 99L;
         CreateCategoryRequestDto requestDto = new CreateCategoryRequestDto()
                 .setName("NEW Test Name")
@@ -178,18 +158,17 @@ public class CategoryControllerTest {
                 .setId(testCategoryId)
                 .setName("NEW Test Name")
                 .setDescription("NEW Test Name");
-
         String jsonRequest = objectMapper.writeValueAsString(requestDto);
-
         MvcResult result = mockMvc.perform(
                 put("/categories/" + testCategoryId)
                         .content(jsonRequest)
                         .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk())
                 .andReturn();
-
+        //When
         CategoryDto actual = objectMapper.readValue(
                 result.getResponse().getContentAsString(), CategoryDto.class);
+        //Then
         EqualsBuilder.reflectionEquals(expected, actual);
     }
 
@@ -219,16 +198,35 @@ public class CategoryControllerTest {
         long testCategoryId = 1L;
         List<BookDtoWithoutCategoryIds> expected = TestDataUtil
                 .getThreeDefaultBookDtoWithoutCategoryIds();
-        //When
         MvcResult result = mockMvc.perform(
                 get("/categories/" + testCategoryId + "/books")
                         .contentType(MediaType.APPLICATION_JSON)
                 ).andExpect(status().isOk())
                 .andReturn();
-        //Then
+        //When
         BookDtoWithoutCategoryIds[] actual = objectMapper.readValue(
                 result.getResponse().getContentAsString(), BookDtoWithoutCategoryIds[].class);
+        //Then
         Assertions.assertEquals(3, actual.length);
         Assertions.assertEquals(expected, Arrays.stream(actual).toList());
+    }
+
+    @SneakyThrows
+    private static void tearDown(DataSource dataSource) {
+        try (Connection connection = dataSource.getConnection()) {
+            connection.setAutoCommit(true);
+            ScriptUtils.executeSqlScript(
+                    connection,
+                    new ClassPathResource("database/category/clear_books_categories_table.sql")
+            );
+            ScriptUtils.executeSqlScript(
+                    connection,
+                    new ClassPathResource("database/category/remove_all_categories.sql")
+            );
+            ScriptUtils.executeSqlScript(
+                    connection,
+                    new ClassPathResource("database/book/remove_all_books.sql")
+            );
+        }
     }
 }

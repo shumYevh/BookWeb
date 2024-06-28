@@ -1,0 +1,1 @@
+DELETE FROM books WHERE isbn = '0-7290-0264-0';

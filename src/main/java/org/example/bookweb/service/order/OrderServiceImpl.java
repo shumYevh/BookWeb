@@ -103,7 +103,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Set<OrderItemResponseDto> getOrderItemsByOrderId(Long orderId, User user) {
         return orderItemMapper.toDto(
-                orderItemRepository.findOrderItemsByOrderIdAndUserId(orderId, user.getId())
+                orderItemRepository.getOrderItemsByOrderIdAndUserId(orderId, user.getId())
         );
     }
 

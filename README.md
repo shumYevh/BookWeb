@@ -58,6 +58,7 @@ If you would like to contribute to this project:
 
 ## Contact
 
-For questions or suggestions, please contact:
-**Yevhen**
-**Email**: shymeiko.zenya@gmail.com
+For questions or suggestions
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Profile-blue?logo=linkedin&logoColor=white&style=flat-square)](https://www.linkedin.com/in/yevhen-shumeiko-5a153b26a/)
+

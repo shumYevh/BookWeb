@@ -26,6 +26,13 @@ The application consists of several controllers that handle:
 - Shopping Cart management: adding, updating, or removing items in the cart.
 - Order processing: creating and managing orders.
 
+## Database Schema
+
+<p align="center">
+  <img src="/DataBase_Schema.png" alt="database_schema"/>
+</p>
+
+
 ## Setup Instructions
 
 1. Clone the repository:
@@ -43,6 +50,11 @@ The application consists of several controllers that handle:
 
 3. Open Swagger UI using your browser to check functionality:
    - Access it at `http://localhost:8081/swagger-ui/`.
+
+<p align="center">
+  <img src="/Swagger.png" alt="swagger_png"/>
+</p>
+
 
 ## Postman Setup
 
